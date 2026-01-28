@@ -48,5 +48,37 @@ namespace FailTrack.Controllers
                 message = "Registro exitoso"
             });
         }
+
+        [HttpPut]
+        [Route("Update/{id}")]
+        public async Task<IActionResult> Update([FromBody] ToolingDto request, int id)
+        {
+            var existingTooling = await _context.Tooling.FindAsync(id);
+
+            if(existingTooling == null)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Id no encontrado"
+                });
+            }
+
+            existingTooling.ApplicantName = request.ApplicantName;
+            existingTooling.FaultDescription = request.FaultDescription;
+            existingTooling.IdLine = request.IdLine;
+            existingTooling.IdMachine = request.IdMachine;
+            existingTooling.UpdatedAt = DateTime.UtcNow;
+            existingTooling.IdStatus = request.IdStatus;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Registro actualizado"
+            });
+        }
+
     }
 }
