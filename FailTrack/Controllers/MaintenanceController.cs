@@ -1,7 +1,9 @@
 ﻿using FailTrack.Dtos;
+using FailTrack.Hubs;
 using FailTrack.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FailTrack.Controllers
@@ -11,10 +13,12 @@ namespace FailTrack.Controllers
     public class MaintenanceController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<FailTrackHub> _hubContext;
 
-        public MaintenanceController(AppDbContext context)
+        public MaintenanceController(AppDbContext context, IHubContext<FailTrackHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -92,6 +96,8 @@ namespace FailTrack.Controllers
             _context.Maintenance.Add(newItem);
             await _context.SaveChangesAsync();
 
+            await _hubContext.Clients.All.SendAsync("ReceiveUpdate");
+
             return Ok(new
             {
                 success = true,
@@ -122,6 +128,8 @@ namespace FailTrack.Controllers
             existingMaintenance.IdStatus = request.IdStatus;
 
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("ReceiveUpdate");
 
             return Ok(new
             {
