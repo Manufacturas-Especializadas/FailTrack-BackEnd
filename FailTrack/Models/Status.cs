@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System;using System.Collections.Generic;
 
 namespace FailTrack.Models;
 
@@ -10,4 +9,6 @@ public partial class Status
     public string StatusName { get; set; }
 
     public virtual ICollection<Maintenance> Maintenance { get; set; } = new List<Maintenance>();
+
+    public virtual ICollection<Tooling> Tooling { get; set; } = new List<Tooling>();
 }

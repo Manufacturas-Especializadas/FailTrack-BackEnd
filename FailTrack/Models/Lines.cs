@@ -12,4 +12,6 @@ public partial class Lines
     public virtual ICollection<Machines> Machines { get; set; } = new List<Machines>();
 
     public virtual ICollection<Maintenance> Maintenance { get; set; } = new List<Maintenance>();
+
+    public virtual ICollection<Tooling> Tooling { get; set; } = new List<Tooling>();
 }
