@@ -19,6 +19,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Status> Status { get; set; }
 
+    public virtual DbSet<Tooling> Tooling { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Lines>(entity =>
@@ -88,6 +90,41 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("statusName");
+        });
+
+        modelBuilder.Entity<Tooling>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Tooling__3214EC07FE235A01");
+
+            entity.Property(e => e.ApplicantName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("applicantName");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("createdAt");
+            entity.Property(e => e.FaultDescription)
+                .IsUnicode(false)
+                .HasColumnName("faultDescription");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updatedAt");
+
+            entity.HasOne(d => d.IdLineNavigation).WithMany(p => p.Tooling)
+                .HasForeignKey(d => d.IdLine)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Tooling__IdLine__5070F446");
+
+            entity.HasOne(d => d.IdMachineNavigation).WithMany(p => p.Tooling)
+                .HasForeignKey(d => d.IdMachine)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Tooling__IdMachi__5165187F");
+
+            entity.HasOne(d => d.IdStatusNavigation).WithMany(p => p.Tooling)
+                .HasForeignKey(d => d.IdStatus)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Tooling__IdStatu__52593CB8");
         });
 
         OnModelCreatingPartial(modelBuilder);
