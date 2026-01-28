@@ -125,7 +125,7 @@ namespace FailTrack.Controllers
 
             return Ok(new
             {
-                succes = true,
+                success = true,
                 message = "Registro actualizado"
             });
         }
