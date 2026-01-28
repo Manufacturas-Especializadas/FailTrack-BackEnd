@@ -2,6 +2,7 @@
 using FailTrack.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FailTrack.Controllers
 {
@@ -14,6 +15,24 @@ namespace FailTrack.Controllers
         public ToolingController(AppDbContext context)
         {
             _context = context;
+        }
+
+        [HttpGet]
+        [Route("GetTooling/{id}")]
+        public async Task<IActionResult> GetTooling(int id)
+        {
+            var toolingId = await _context.Tooling.FirstOrDefaultAsync(t => t.Id == id);
+
+            if(toolingId == null)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Id no encontrado"
+                });
+            }
+
+            return Ok(toolingId);
         }
 
         [HttpPost]
