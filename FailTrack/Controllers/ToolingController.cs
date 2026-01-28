@@ -1,7 +1,9 @@
-﻿using FailTrack.Models;
-using FailTrack.Dtos;
+﻿using FailTrack.Dtos;
+using FailTrack.Hubs;
+using FailTrack.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FailTrack.Controllers
@@ -11,10 +13,12 @@ namespace FailTrack.Controllers
     public class ToolingController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<FailTrackHub> _hubContext;
 
-        public ToolingController(AppDbContext context)
+        public ToolingController(AppDbContext context, IHubContext<FailTrackHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -91,6 +95,8 @@ namespace FailTrack.Controllers
             _context.Tooling.Add(newItem);
             await _context.SaveChangesAsync();
 
+            await _hubContext.Clients.All.SendAsync("ReceiveUpdate");
+
             return Ok(new
             {
                 success = true,
@@ -121,6 +127,8 @@ namespace FailTrack.Controllers
             existingTooling.IdStatus = request.IdStatus;
 
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("ReceiveUpdate");
 
             return Ok(new
             {

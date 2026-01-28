@@ -1,3 +1,4 @@
+using FailTrack.Hubs;
 using FailTrack.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 
 var connection = builder.Configuration.GetConnectionString("Connection");
 builder.Services.AddDbContext<AppDbContext>(option =>
@@ -21,7 +23,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(allowedConnection)
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
     });
 });
 
@@ -37,5 +40,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<FailTrackHub>("/machineHub");
 
 app.Run();
