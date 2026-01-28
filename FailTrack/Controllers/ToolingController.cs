@@ -35,6 +35,36 @@ namespace FailTrack.Controllers
             return Ok(toolingId);
         }
 
+        [HttpGet]
+        [Route("GetToolingList")]
+        public async Task<IActionResult> GetToolingList()
+        {
+            var list = await _context.Tooling
+                            .AsNoTracking()
+                            .Select(m => new
+                            {
+                                m.Id,
+                                m.ApplicantName,
+                                LineName = m.IdLineNavigation.LineName,
+                                MachineName = m.IdMachineNavigation.MachineName,
+                                Description = m.FaultDescription ?? "Sin descripción",
+                                Status = m.IdStatusNavigation.StatusName,
+                                Date = m.CreatedAt
+                            })
+                            .ToListAsync();
+
+            if (list == null)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Sin datos"
+                });
+            }
+
+            return Ok(list);
+        }
+
         [HttpPost]
         [Route("Create")]
         public async Task<IActionResult> Create([FromBody] ToolingDto request)
