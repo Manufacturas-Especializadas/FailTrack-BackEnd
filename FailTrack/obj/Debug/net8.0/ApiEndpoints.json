@@ -1,0 +1,101 @@
+[
+  {
+    "ContainingType": "FailTrack.Controllers.GeneralListController",
+    "Method": "GetLines",
+    "RelativePath": "api/GeneralList/GetLines",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FailTrack.Controllers.GeneralListController",
+    "Method": "GetMachineByLine",
+    "RelativePath": "api/GeneralList/GetMachineByLine/{lineId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "lineId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FailTrack.Controllers.GeneralListController",
+    "Method": "GetStatus",
+    "RelativePath": "api/GeneralList/GetStatus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FailTrack.Controllers.MaintenanceController",
+    "Method": "Create",
+    "RelativePath": "api/Maintenance/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FailTrack.Dtos.MaintenanceDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FailTrack.Controllers.MaintenanceController",
+    "Method": "GetMaintenanceById",
+    "RelativePath": "api/Maintenance/GetMaintenanceById/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FailTrack.Controllers.MaintenanceController",
+    "Method": "GetMaintenanceList",
+    "RelativePath": "api/Maintenance/GetMaintenanceList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FailTrack.Controllers.MaintenanceController",
+    "Method": "Update",
+    "RelativePath": "api/Maintenance/Update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FailTrack.Dtos.MaintenanceDto",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
