@@ -137,5 +137,29 @@ namespace FailTrack.Controllers
             });
         }
 
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var tooling = await _context.Tooling.FindAsync(id);
+
+            if(tooling == null)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Id no encontrado"
+                });
+            }
+
+            _context.Tooling.Remove(tooling);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Registro eliminado"
+            });
+        }
     }
 }
