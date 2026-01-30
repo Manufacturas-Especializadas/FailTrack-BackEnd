@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace FailTrack.Controllers
 {
@@ -37,6 +38,45 @@ namespace FailTrack.Controllers
             }
 
             return Ok(toolingId);
+        }
+
+        [HttpGet]
+        [Route("GetAvailableMonthlyReports")]
+        public async Task<IActionResult> GetAvailableMonthlyReports()
+        {
+            try
+            {
+                var reportGroups = await _context.Tooling
+                            .Where(t => t.CreatedAt.HasValue)
+                            .GroupBy(t => new { t.CreatedAt!.Value.Year, t.CreatedAt!.Value.Month })
+                            .Select(g => new
+                            {
+                                Year = g.Key.Year,
+                                Month = g.Key.Month,
+                                Count = g.Count()
+                            })
+                            .OrderByDescending(x => x.Year)
+                            .ThenByDescending(x => x.Month)
+                            .ToListAsync();
+
+                var result = reportGroups.Select(r => new
+                {
+                    r.Year,
+                    r.Month,
+                    MontName = CultureInfo.CreateSpecificCulture("es-Mx").DateTimeFormat.GetMonthName(r.Month),
+                    RecordCount = r.Count
+                });
+
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
 
         [HttpGet]
