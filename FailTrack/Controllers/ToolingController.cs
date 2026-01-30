@@ -1,10 +1,12 @@
-﻿using FailTrack.Dtos;
+﻿using ClosedXML.Excel;
+using FailTrack.Dtos;
 using FailTrack.Hubs;
 using FailTrack.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace FailTrack.Controllers
 {
@@ -37,6 +39,137 @@ namespace FailTrack.Controllers
             }
 
             return Ok(toolingId);
+        }
+
+        [HttpGet]
+        [Route("GetAvailableMonthlyReports")]
+        public async Task<IActionResult> GetAvailableMonthlyReports()
+        {
+            try
+            {
+                var reportGroups = await _context.Tooling
+                            .Where(t => t.CreatedAt.HasValue)
+                            .GroupBy(t => new { t.CreatedAt!.Value.Year, t.CreatedAt!.Value.Month })
+                            .Select(g => new
+                            {
+                                Year = g.Key.Year,
+                                Month = g.Key.Month,
+                                Count = g.Count()
+                            })
+                            .OrderByDescending(x => x.Year)
+                            .ThenByDescending(x => x.Month)
+                            .ToListAsync();
+
+                var result = reportGroups.Select(r => new
+                {
+                    r.Year,
+                    r.Month,
+                    MontName = CultureInfo.CreateSpecificCulture("es-Mx").DateTimeFormat.GetMonthName(r.Month),
+                    RecordCount = r.Count
+                });
+
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("DownloadMonthlyReport")]
+        public async Task<IActionResult> DownloadMonthlyReport([FromQuery] int year, [FromQuery] int month)
+        {
+            try
+            {
+                var data = await _context.Tooling
+                                .Include(t => t.IdLineNavigation)
+                                .Include(t => t.IdMachineNavigation)
+                                .Include(t => t.IdStatusNavigation)
+                                .Where(t => t.CreatedAt.HasValue &&
+                                                t.CreatedAt.Value.Year == year &&
+                                                t.CreatedAt.Value.Month == month)
+                                .OrderBy(t => t.CreatedAt)
+                                .ToListAsync();
+
+                if (!data.Any())
+                {
+                    return NotFound(new
+                    {
+                        success = false,
+                        message = "No hay datos para el periodo seleccionado"
+                    });
+                }
+
+                using(var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Herramentales");
+
+                    worksheet.Cell(1, 1).Value = "ID";
+                    worksheet.Cell(1, 2).Value = "Solicitante";
+                    worksheet.Cell(1, 3).Value = "Línea";
+                    worksheet.Cell(1, 4).Value = "Máquina";
+                    worksheet.Cell(1, 5).Value = "Descripción falla";
+                    worksheet.Cell(1, 6).Value = "Estatus";
+                    worksheet.Cell(1, 7).Value = "Fecha creación";
+                    worksheet.Cell(1, 8).Value = "Fecha de solución";
+
+                    var headerRange = worksheet.Range(1, 1, 1, 8);
+
+                    headerRange.Style.Font.SetBold();
+                    headerRange.Style.Font.FontColor = XLColor.White;
+                    headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#0099cc");
+                    headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                    int row = 2;
+
+                    foreach(var item in data)
+                    {
+                        worksheet.Cell(row, 1).Value = item.Id;
+                        worksheet.Cell(row, 2).Value = item.ApplicantName;
+                        worksheet.Cell(row, 3).Value = item.IdLineNavigation?.LineName ?? "N/A";
+                        worksheet.Cell(row, 4).Value = item.IdMachineNavigation?.MachineName ?? "N/A";
+                        worksheet.Cell(row, 5).Value = item.FaultDescription;
+
+                        var statusCell = worksheet.Cell(row, 6);
+                        statusCell.Value = item.IdStatusNavigation?.StatusName ?? "N/A";
+
+                        worksheet.Cell(row, 7).Value = item.CreatedAt;
+                        worksheet.Cell(row, 8).Value = item.UpdatedAt;
+
+                        row++;
+                    }
+
+                    worksheet.Columns().AdjustToContents();
+
+                    using(var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        var content = stream.ToArray();
+
+                        string fileName = $"Reporte_Herramentales_{year}_{month:00}.xlsx";
+
+                        return File(
+                            content,
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            fileName
+                        );
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Error al generar excel",
+                    error = ex.Message
+                });
+            }
         }
 
         [HttpGet]
