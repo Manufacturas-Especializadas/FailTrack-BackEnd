@@ -64,7 +64,7 @@ namespace FailTrack.Controllers
                 {
                     r.Year,
                     r.Month,
-                    MontName = CultureInfo.CreateSpecificCulture("es-Mx").DateTimeFormat.GetMonthName(r.Month),
+                    MonthName = CultureInfo.CreateSpecificCulture("es-Mx").DateTimeFormat.GetMonthName(r.Month),
                     RecordCount = r.Count
                 });
 
