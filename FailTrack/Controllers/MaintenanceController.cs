@@ -39,6 +39,7 @@ namespace FailTrack.Controllers
                                 Status = m.IdStatusNavigation.StatusName,
                                 Date = m.CreatedAt
                             })
+                            .OrderByDescending(m => m.Id)
                             .ToListAsync();
 
             if(list == null)
