@@ -55,13 +55,23 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("applicantName");
+            entity.Property(e => e.ClosingDate)
+                .HasColumnType("datetime")
+                .HasColumnName("closingDate");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("createdAt");
+            entity.Property(e => e.FailureSolution)
+                .IsUnicode(false)
+                .HasColumnName("failureSolution");
             entity.Property(e => e.FaultDescription)
                 .IsUnicode(false)
                 .HasColumnName("faultDescription");
+            entity.Property(e => e.Responsible)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("responsible");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updatedAt");
