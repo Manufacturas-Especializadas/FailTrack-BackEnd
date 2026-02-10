@@ -37,7 +37,8 @@ namespace FailTrack.Controllers
                                 MachineName = m.IdMachineNavigation.MachineName,
                                 Description = m.FaultDescription ?? "Sin descripción",
                                 Status = m.IdStatusNavigation.StatusName,
-                                Date = m.CreatedAt
+                                Date = m.CreatedAt,
+                                ClosingDate = m.ClosingDate
                             })
                             .OrderByDescending(m => m.Id)
                             .ToListAsync();
