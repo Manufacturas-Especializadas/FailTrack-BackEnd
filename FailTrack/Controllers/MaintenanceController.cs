@@ -167,7 +167,7 @@ namespace FailTrack.Controllers
                         statusCell.Value = item.IdStatusNavigation?.StatusName ?? "N/A";
 
                         worksheet.Cell(row, 7).Value = item.CreatedAt;
-                        worksheet.Cell(row, 8).Value = item.UpdatedAt;
+                        worksheet.Cell(row, 8).Value = item.UpdatedAt.UtcDateTime;
 
                         row++;
                     }
@@ -213,13 +213,15 @@ namespace FailTrack.Controllers
                 });
             }
 
+            var now = DateTimeOffset.UtcNow;
+
             var newItem = new Maintenance
             {
                 ApplicantName = request.ApplicantName,
                 FaultDescription = request.FaultDescription,
                 IdLine = request.IdLine,
                 IdMachine = request.IdMachine,
-                UpdatedAt = null,
+                UpdatedAt = now,
                 IdStatus = 1
             };
 
