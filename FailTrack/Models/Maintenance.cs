@@ -21,6 +21,12 @@ public partial class Maintenance
 
     public int? IdStatus { get; set; }
 
+    public string? Responsible { get; set; }
+
+    public string? FailureSolution { get; set; }
+
+    public DateTime? ClosingDate { get; set; }
+
     public virtual Lines IdLineNavigation { get; set; }
 
     public virtual Machines IdMachineNavigation { get; set; }
