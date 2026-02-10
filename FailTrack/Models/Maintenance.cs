@@ -13,7 +13,7 @@ public partial class Maintenance
 
     public DateTime? CreatedAt { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 
     public int? IdLine { get; set; }
 
@@ -25,7 +25,7 @@ public partial class Maintenance
 
     public string? FailureSolution { get; set; }
 
-    public DateTime? ClosingDate { get; set; }
+    public DateTimeOffset? ClosingDate { get; set; }
 
     public virtual Lines IdLineNavigation { get; set; }
 
