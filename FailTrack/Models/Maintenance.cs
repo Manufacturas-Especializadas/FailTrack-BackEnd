@@ -13,13 +13,19 @@ public partial class Maintenance
 
     public DateTime? CreatedAt { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 
     public int? IdLine { get; set; }
 
     public int? IdMachine { get; set; }
 
     public int? IdStatus { get; set; }
+
+    public string? Responsible { get; set; }
+
+    public string? FailureSolution { get; set; }
+
+    public DateTimeOffset? ClosingDate { get; set; }
 
     public virtual Lines IdLineNavigation { get; set; }
 

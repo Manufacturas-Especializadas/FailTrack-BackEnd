@@ -37,7 +37,8 @@ namespace FailTrack.Controllers
                                 MachineName = m.IdMachineNavigation.MachineName,
                                 Description = m.FaultDescription ?? "Sin descripción",
                                 Status = m.IdStatusNavigation.StatusName,
-                                Date = m.CreatedAt
+                                Date = m.CreatedAt,
+                                ClosingDate = m.ClosingDate
                             })
                             .OrderByDescending(m => m.Id)
                             .ToListAsync();
@@ -166,7 +167,7 @@ namespace FailTrack.Controllers
                         statusCell.Value = item.IdStatusNavigation?.StatusName ?? "N/A";
 
                         worksheet.Cell(row, 7).Value = item.CreatedAt;
-                        worksheet.Cell(row, 8).Value = item.UpdatedAt;
+                        worksheet.Cell(row, 8).Value = item.ClosingDate?.LocalDateTime;
 
                         row++;
                     }
@@ -212,13 +213,15 @@ namespace FailTrack.Controllers
                 });
             }
 
+            var now = DateTimeOffset.UtcNow;
+
             var newItem = new Maintenance
             {
                 ApplicantName = request.ApplicantName,
                 FaultDescription = request.FaultDescription,
                 IdLine = request.IdLine,
                 IdMachine = request.IdMachine,
-                UpdatedAt = null,
+                UpdatedAt = now,
                 IdStatus = 1
             };
 
@@ -251,10 +254,17 @@ namespace FailTrack.Controllers
 
             existingMaintenance.ApplicantName = request.ApplicantName;
             existingMaintenance.FaultDescription = request.FaultDescription;
+            existingMaintenance.Responsible = request.Responsible;
+            existingMaintenance.FailureSolution = request.FailureSolution;
             existingMaintenance.IdLine = request.IdLine;
             existingMaintenance.IdMachine = request.IdMachine;
             existingMaintenance.UpdatedAt = DateTime.UtcNow;
             existingMaintenance.IdStatus = request.IdStatus;
+
+            if(existingMaintenance.ClosingDate == null && request.IdStatus == 3)
+            {
+                existingMaintenance.ClosingDate = DateTime.UtcNow;
+            }
 
             await _context.SaveChangesAsync();
 

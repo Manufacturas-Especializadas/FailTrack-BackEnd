@@ -12,6 +12,12 @@
 
         public int? IdStatus { get; set; }
 
+        public string Responsible { get; set; } = string.Empty;
+
+        public string FailureSolution { get; set; } = string.Empty;
+
+        public DateTime? ClosingDate { get; set; }
+
         public DateTime? UpdatedAt { get; set; }
     }
 }
