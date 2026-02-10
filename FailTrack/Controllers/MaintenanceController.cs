@@ -251,10 +251,17 @@ namespace FailTrack.Controllers
 
             existingMaintenance.ApplicantName = request.ApplicantName;
             existingMaintenance.FaultDescription = request.FaultDescription;
+            existingMaintenance.Responsible = request.Responsible;
+            existingMaintenance.FailureSolution = request.FailureSolution;
             existingMaintenance.IdLine = request.IdLine;
             existingMaintenance.IdMachine = request.IdMachine;
             existingMaintenance.UpdatedAt = DateTime.UtcNow;
             existingMaintenance.IdStatus = request.IdStatus;
+
+            if(existingMaintenance.ClosingDate == null && request.IdStatus == 3)
+            {
+                existingMaintenance.ClosingDate = DateTime.UtcNow;
+            }
 
             await _context.SaveChangesAsync();
 
