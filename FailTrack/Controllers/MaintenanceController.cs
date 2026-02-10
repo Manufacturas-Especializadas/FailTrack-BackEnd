@@ -167,7 +167,7 @@ namespace FailTrack.Controllers
                         statusCell.Value = item.IdStatusNavigation?.StatusName ?? "N/A";
 
                         worksheet.Cell(row, 7).Value = item.CreatedAt;
-                        worksheet.Cell(row, 8).Value = item.UpdatedAt.UtcDateTime;
+                        worksheet.Cell(row, 8).Value = item.ClosingDate?.LocalDateTime;
 
                         row++;
                     }
