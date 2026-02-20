@@ -6,6 +6,8 @@
 
         public string FaultDescription { get; set; } = string.Empty;
 
+        public string LineFaultDescription { get; set; }
+
         public int? IdLine { get; set; }
 
         public int? IdMachine { get; set; }

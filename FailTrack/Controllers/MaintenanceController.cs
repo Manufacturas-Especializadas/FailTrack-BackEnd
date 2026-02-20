@@ -35,6 +35,7 @@ namespace FailTrack.Controllers
                                 m.ApplicantName,
                                 LineName = m.IdLineNavigation.LineName,
                                 MachineName = m.IdMachineNavigation.MachineName,
+                                DescriptionLine = m.LineFaultDescription,
                                 Description = m.FaultDescription ?? "Sin descripción",
                                 Status = m.IdStatusNavigation.StatusName,
                                 Date = m.CreatedAt,
@@ -219,6 +220,7 @@ namespace FailTrack.Controllers
             {
                 ApplicantName = request.ApplicantName,
                 FaultDescription = request.FaultDescription,
+                LineFaultDescription = request.LineFaultDescription,
                 IdLine = request.IdLine,
                 IdMachine = request.IdMachine,
                 UpdatedAt = now,
@@ -254,6 +256,7 @@ namespace FailTrack.Controllers
 
             existingMaintenance.ApplicantName = request.ApplicantName;
             existingMaintenance.FaultDescription = request.FaultDescription;
+            existingMaintenance.LineFaultDescription = request.LineFaultDescription;
             existingMaintenance.Responsible = request.Responsible;
             existingMaintenance.FailureSolution = request.FailureSolution;
             existingMaintenance.IdLine = request.IdLine;
