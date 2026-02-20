@@ -27,6 +27,8 @@ public partial class Tooling
 
     public DateTimeOffset? ClosingDate { get; set; }
 
+    public string LineFaultDescription { get; set; }
+
     public virtual Lines IdLineNavigation { get; set; }
 
     public virtual Machines IdMachineNavigation { get; set; }
