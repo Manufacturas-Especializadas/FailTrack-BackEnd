@@ -186,7 +186,8 @@ namespace FailTrack.Controllers
                                 MachineName = m.IdMachineNavigation.MachineName,
                                 Description = m.FaultDescription ?? "Sin descripción",
                                 Status = m.IdStatusNavigation.StatusName,
-                                Date = m.CreatedAt
+                                Date = m.CreatedAt,
+                                ClosingDate = m.ClosingDate
                             })
                             .OrderByDescending(m => m.Id)
                             .ToListAsync();
@@ -255,10 +256,17 @@ namespace FailTrack.Controllers
 
             existingTooling.ApplicantName = request.ApplicantName;
             existingTooling.FaultDescription = request.FaultDescription;
+            existingTooling.Responsible = request.Responsible;
+            existingTooling.FailureSolution = request.FailureSolution;
             existingTooling.IdLine = request.IdLine;
             existingTooling.IdMachine = request.IdMachine;
             existingTooling.UpdatedAt = DateTime.UtcNow;
             existingTooling.IdStatus = request.IdStatus;
+
+            if(existingTooling.ClosingDate == null && request.IdStatus == 3)
+            {
+                existingTooling.ClosingDate = DateTime.UtcNow;
+            }
 
             await _context.SaveChangesAsync();
 
