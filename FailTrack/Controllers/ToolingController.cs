@@ -262,12 +262,12 @@ namespace FailTrack.Controllers
             existingTooling.FailureSolution = request.FailureSolution;
             existingTooling.IdLine = request.IdLine;
             existingTooling.IdMachine = request.IdMachine;
-            existingTooling.UpdatedAt = DateTime.UtcNow;
+            existingTooling.UpdatedAt = DateTimeOffset.UtcNow;
             existingTooling.IdStatus = request.IdStatus;
 
             if(existingTooling.ClosingDate == null && request.IdStatus == 3)
             {
-                existingTooling.ClosingDate = DateTime.UtcNow;
+                existingTooling.ClosingDate = DateTimeOffset.UtcNow;
             }
 
             await _context.SaveChangesAsync();
