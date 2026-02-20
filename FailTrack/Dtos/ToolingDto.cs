@@ -11,5 +11,9 @@
         public int? IdMachine { get; set; }
 
         public int? IdStatus { get; set; }
+
+        public string Responsible { get; set; } = string.Empty;
+
+        public string FailureSolution { get; set; } = string.Empty;
     }
 }
