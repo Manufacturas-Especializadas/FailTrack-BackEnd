@@ -205,7 +205,7 @@ namespace FailTrack.Controllers
         [Route("Create")]
         public async Task<IActionResult> Create([FromBody] MaintenanceDto request)
         {
-            if(request == null)
+            if (request == null)
             {
                 return BadRequest(new
                 {
@@ -252,6 +252,18 @@ namespace FailTrack.Controllers
                     success = false,
                     message = "Id no encontrado"
                 });
+            }
+
+            if (request.IdStatus == 3)
+            {
+                if (string.IsNullOrWhiteSpace(request.FaultDescription))
+                    return BadRequest("Falta el Reporte Técnico");
+
+                if (string.IsNullOrWhiteSpace(request.Responsible))
+                    return BadRequest("Falta indicar quién solucionó la falla");
+
+                if (string.IsNullOrWhiteSpace(request.FailureSolution))
+                    return BadRequest("Falta describir la solución");
             }
 
             existingMaintenance.ApplicantName = request.ApplicantName;

@@ -4,9 +4,9 @@
     {
         public string ApplicantName { get; set; } = string.Empty;
 
-        public string FaultDescription { get; set; } = string.Empty;
+        public string? FaultDescription { get; set; }
 
-        public string LineFaultDescription { get; set; }
+        public string? LineFaultDescription { get; set; }
 
         public int? IdLine { get; set; }
 
@@ -14,9 +14,9 @@
 
         public int? IdStatus { get; set; }
 
-        public string Responsible { get; set; } = string.Empty;
+        public string? Responsible { get; set; }
 
-        public string FailureSolution { get; set; } = string.Empty;
+        public string? FailureSolution { get; set; }
 
         public DateTime? ClosingDate { get; set; }
 
