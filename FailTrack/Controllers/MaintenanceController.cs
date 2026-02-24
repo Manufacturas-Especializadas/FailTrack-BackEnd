@@ -168,7 +168,7 @@ namespace FailTrack.Controllers
                         statusCell.Value = item.IdStatusNavigation?.StatusName ?? "N/A";
 
                         worksheet.Cell(row, 7).Value = item.CreatedAt;
-                        worksheet.Cell(row, 8).Value = item.ClosingDate?.LocalDateTime;
+                        worksheet.Cell(row, 8).Value = item.ClosingDate?.UtcDateTime;
 
                         row++;
                     }
@@ -266,6 +266,8 @@ namespace FailTrack.Controllers
                     return BadRequest("Falta describir la solución");
             }
 
+            var now = DateTimeOffset.Now;
+
             existingMaintenance.ApplicantName = request.ApplicantName;
             existingMaintenance.FaultDescription = request.FaultDescription;
             existingMaintenance.LineFaultDescription = request.LineFaultDescription;
@@ -273,12 +275,12 @@ namespace FailTrack.Controllers
             existingMaintenance.FailureSolution = request.FailureSolution;
             existingMaintenance.IdLine = request.IdLine;
             existingMaintenance.IdMachine = request.IdMachine;
-            existingMaintenance.UpdatedAt = DateTime.UtcNow;
+            existingMaintenance.UpdatedAt = now;
             existingMaintenance.IdStatus = request.IdStatus;
 
             if(existingMaintenance.ClosingDate == null && request.IdStatus == 3)
             {
-                existingMaintenance.ClosingDate = DateTime.UtcNow;
+                existingMaintenance.ClosingDate = now;
             }
 
             await _context.SaveChangesAsync();
