@@ -266,7 +266,9 @@ namespace FailTrack.Controllers
                     return BadRequest("Falta describir la solución");
             }
 
-            var now = DateTimeOffset.Now;
+            TimeZoneInfo mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time (Mexico)");
+
+            DateTimeOffset nowInMexico = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, mexicoTimeZone);
 
             existingMaintenance.ApplicantName = request.ApplicantName;
             existingMaintenance.FaultDescription = request.FaultDescription;
@@ -275,12 +277,12 @@ namespace FailTrack.Controllers
             existingMaintenance.FailureSolution = request.FailureSolution;
             existingMaintenance.IdLine = request.IdLine;
             existingMaintenance.IdMachine = request.IdMachine;
-            existingMaintenance.UpdatedAt = now;
+            existingMaintenance.UpdatedAt = nowInMexico;
             existingMaintenance.IdStatus = request.IdStatus;
 
             if(existingMaintenance.ClosingDate == null && request.IdStatus == 3)
             {
-                existingMaintenance.ClosingDate = now;
+                existingMaintenance.ClosingDate = nowInMexico;
             }
 
             await _context.SaveChangesAsync();
