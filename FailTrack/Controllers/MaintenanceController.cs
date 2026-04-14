@@ -38,7 +38,20 @@ namespace FailTrack.Controllers
 
             var reportes = await _context.Maintenance
                 .Where(m => m.IdLine == lineId)
-                .OrderByDescending(m => m.CreatedAt)
+                .Select(m => new
+                {
+                    Id = m.Id,
+                    Name = m.ApplicantName,
+                    Description = m.FaultDescription,
+                    Date = m.CreatedAt,
+                    Line = m.IdLineNavigation.LineName,
+                    Machine = m.IdMachineNavigation.MachineName,
+                    Reponsible = m.Responsible,
+                    Solution = m.FailureSolution,
+                    ClosingDate = m.ClosingDate,
+                    LineDescription = m.LineFaultDescription
+                })
+                .OrderByDescending(m => m.Date)
                 .ToListAsync();
 
             return Ok(reportes);
