@@ -2,6 +2,7 @@
 using FailTrack.Dtos;
 using FailTrack.Hubs;
 using FailTrack.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -21,6 +22,26 @@ namespace FailTrack.Controllers
         {
             _context = context;
             _hubContext = hubContext;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetMyReports")]
+        public async Task<ActionResult> GetMisReportes()
+        {
+            var claim = User.FindFirst("lineId")?.Value;
+
+            if (string.IsNullOrEmpty(claim) || claim == "0")
+                return BadRequest("Usuario no asociado a una línea.");
+
+            int lineId = int.Parse(claim);
+
+            var reportes = await _context.Maintenance
+                .Where(m => m.IdLine == lineId)
+                .OrderByDescending(m => m.CreatedAt)
+                .ToListAsync();
+
+            return Ok(reportes);
         }
 
         [HttpGet]
