@@ -178,11 +178,12 @@ namespace FailTrack.Controllers
                     worksheet.Cell(1, 3).Value = "Línea";
                     worksheet.Cell(1, 4).Value = "Máquina";
                     worksheet.Cell(1, 5).Value = "Descripción Falla";
-                    worksheet.Cell(1, 6).Value = "Estatus";
-                    worksheet.Cell(1, 7).Value = "Fecha Creación";
-                    worksheet.Cell(1, 8).Value = "Fecha Solución";
+                    worksheet.Cell(1, 6).Value = "Descripción de solución de falla";
+                    worksheet.Cell(1, 7).Value = "Estatus";
+                    worksheet.Cell(1, 8).Value = "Fecha Creación";
+                    worksheet.Cell(1, 9).Value = "Fecha Solución";
 
-                    var headerRange = worksheet.Range(1, 1, 1, 8);
+                    var headerRange = worksheet.Range(1, 1, 1, 9);
 
                     headerRange.Style.Font.SetBold();
                     headerRange.Style.Font.FontColor = XLColor.White;
@@ -197,15 +198,16 @@ namespace FailTrack.Controllers
                         worksheet.Cell(row, 3).Value = item.IdLineNavigation?.LineName ?? "N/A";
                         worksheet.Cell(row, 4).Value = item.IdMachineNavigation?.MachineName ?? "N/A";
                         worksheet.Cell(row, 5).Value = item.FaultDescription;
+                        worksheet.Cell(row, 6).Value = item.FailureSolution;
 
-                        var statusCell = worksheet.Cell(row, 6);
+                        var statusCell = worksheet.Cell(row, 7);
                         statusCell.Value = item.IdStatusNavigation?.StatusName ?? "N/A";
 
-                        worksheet.Cell(row, 7).Value = item.CreatedAt;
+                        worksheet.Cell(row, 8).Value = item.CreatedAt;
                         if (item.ClosingDate.HasValue)
-                            worksheet.Cell(row, 8).Value = item.ClosingDate.Value.DateTime;
+                            worksheet.Cell(row, 9).Value = item.ClosingDate.Value.DateTime;
                         else
-                            worksheet.Cell(row, 8).Value = Blank.Value;
+                            worksheet.Cell(row, 10).Value = Blank.Value;
 
                         row++;
                     }
